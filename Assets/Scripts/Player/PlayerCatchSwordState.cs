@@ -24,6 +24,7 @@ public class PlayerCatchSwordState : PlayerState
     public override void Exit()
     {
         base.Exit();
+        player.StartCoroutine("BusyFor", .1f);
     }
 
     public override void Update()

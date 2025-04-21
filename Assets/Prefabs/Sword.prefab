@@ -110,6 +110,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 087b80ee9a6a21a4a9711a3e1393cb7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  returnSpeed: 12
+  bounceSpeed: 20
+  amountOfBounces: 4
+  enemyTarget: []
 --- !u!1 &8240010729578409166
 GameObject:
   m_ObjectHideFlags: 0

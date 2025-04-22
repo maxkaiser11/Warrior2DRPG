@@ -13,11 +13,13 @@ public class SwordSkillController : MonoBehaviour
     private bool canRotate = true;
     private bool isReturning;
 
+    [Header("Pierce Info")] [SerializeField]
+    private float pierceAmount;
 
     [Header("Bounce Info")]
     [SerializeField] private float bounceSpeed;
     private bool isBouncing;
-    private int amountOfBounces;
+    private int bounceAmount;
     private List<Transform> enemyTarget;
     private int targetIndex;
 
@@ -34,15 +36,21 @@ public class SwordSkillController : MonoBehaviour
         rb.linearVelocity = _dir;
         rb.gravityScale = _gravityScale;
         
-        anim.SetBool("rotation", true);
+        if (pierceAmount <= 0)
+            anim.SetBool("rotation", true);
     }
 
     public void SetupBounce(bool _isBouncing, int _amountOfBounces)
     {
         isBouncing = _isBouncing;
-        amountOfBounces = _amountOfBounces;
+        bounceAmount = _amountOfBounces;
 
         enemyTarget = new List<Transform>();
+    }
+
+    public void SetupPierce(int _pierceAmount)
+    {
+        pierceAmount = _pierceAmount;
     }
 
     public void ReturnSword()
@@ -79,9 +87,9 @@ public class SwordSkillController : MonoBehaviour
             if (Vector2.Distance(transform.position, enemyTarget[targetIndex].position) < .1f)
             {
                 targetIndex++;
-                amountOfBounces--;
+                bounceAmount--;
 
-                if (amountOfBounces <= 0)
+                if (bounceAmount <= 0)
                 {
                     isBouncing = false;
                     isReturning = true;
@@ -97,6 +105,8 @@ public class SwordSkillController : MonoBehaviour
     {
         if (isReturning)
             return;
+        
+        collision.GetComponent<Enemy>()?.Damage();
 
         if (collision.GetComponent<Enemy>() != null)
         {
@@ -117,7 +127,11 @@ public class SwordSkillController : MonoBehaviour
 
     private void StuckInto(Collider2D collision)
     {
-        
+        if (pierceAmount > 0 && collision.GetComponent<Enemy>() != null)
+        {
+            pierceAmount--;
+            return;
+        }
         canRotate = false;
         cd.enabled = false;
         
